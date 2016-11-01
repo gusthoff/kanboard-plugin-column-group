@@ -17,5 +17,5 @@ function version_1(PDO $pdo)
     $pdo->exec('ALTER TABLE columns ADD COLUMN column_group_code VARCHAR(30)');
     
     $pdo->exec('ALTER TABLE columns ADD FOREIGN KEY(column_group_code) 
-        REFERENCES column_groups(code) ON DELETE CASCADE');
+        REFERENCES column_groups(code)');
 }
