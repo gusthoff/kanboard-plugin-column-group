@@ -36,7 +36,7 @@ This plug-in extends Kanboard's functionality with the following features:
 - Displays column groups above the corresponding columns on the project board.
     - Adjacent columns belonging to the same column group can be easily
       identified on the board.
-- Allows for searching for column groups using this filter: `column_group`.
+- Allows for searching for column groups using this filter: `column_groups`.
     - This also allows for searching for tasks from various projects sharing
       the same column group.
 
