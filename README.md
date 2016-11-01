@@ -53,14 +53,26 @@ limitations:
 - GUI for column groups (on the project board) is very simple.
 
 
-5. Requirements
+5. Testing
+----------
+
+This plug-in was manually tested with the following configuration:
+
+- Kanboard 1.0.34
+- PHP 7.0.8
+- Postgres 9.5.5
+- Sqlite 3.14.1
+- Mysql 5.7.16
+
+
+6. Requirements
 ---------------
 
 - Kanboard >= 1.0.34
 - PHP >= 5.3.3
 
 
-6. Installation
+7. Installation
 ---------------
 
 You have the choice between 3 methods:
