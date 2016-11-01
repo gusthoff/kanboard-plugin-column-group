@@ -194,16 +194,4 @@ class ColumnGroupModel extends Base
         }
         return $result;
     }
-    
-    /**
-     * Remove a column group and associations to it (columns)
-     *
-     * @access public
-     * @param  string    $column_code   Column code
-     * @return boolean
-     */
-    public function purge($column_code)
-    {
-        return $this->db->table(self::TABLE)->eq('code', $column_code)->remove();
-    }
 }
