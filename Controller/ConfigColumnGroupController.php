@@ -87,12 +87,11 @@ class ConfigColumnGroupController extends BaseController
         # Add new column code for renaming
         $column['new_code'] = $column['code'];
 
-        $this->response->html($this->helper->layout->project('ColumnGroup:config_column_group/edit', array(
+        $this->response->html($this->helper->layout->config('ColumnGroup:config_column_group/edit', array(
             'errors' => $errors,
             'values' => $values ?: $column,
             'column' => $column,
-            'title' => t('Column groups').' &gt; '.t('Edit'),
-            'project' => 0,
+            'title' => t('Column groups').' &gt; '.t('Edit')
         )));
     }
 
@@ -148,10 +147,9 @@ class ConfigColumnGroupController extends BaseController
         $column_code = $this->request->getStringParam('column_code');
         $column = $this->columnGroupModel->getByCode($this->request->getStringParam('column_code'));
 
-        $this->response->html($this->helper->layout->project('ColumnGroup:config_column_group/remove', array(
+        $this->response->html($this->helper->layout->config('ColumnGroup:config_column_group/remove', array(
             'column_code' => $column_code,
-            'title' => t('Column groups').' &gt; '.t('Confirm'),
-            'project' => 0,
+            'title' => t('Column groups').' &gt; '.t('Confirm')
         )));
     }
 
