@@ -4,21 +4,7 @@ namespace Kanboard\Plugin\ColumnGroup\Schema;
 
 use PDO;
 
-const VERSION = 3;
-
-function version_3(PDO $pdo)
-{
-    $pdo->exec('ALTER TABLE column_groups MODIFY COLUMN title VARCHAR(255) NOT NULL UNIQUE');
-}
-
-function version_2(PDO $pdo)
-{
-    $pdo->exec('ALTER TABLE column_groups ADD COLUMN project_id INTEGER');
-
-    $pdo->exec('ALTER TABLE column_groups ADD CONSTRAINT fk_project_id
-        FOREIGN KEY(project_id)
-        REFERENCES projects(id)');
-}
+const VERSION = 1;
 
 function version_1(PDO $pdo)
 {
@@ -26,7 +12,9 @@ function version_1(PDO $pdo)
         code VARCHAR(30) NOT NULL,
         title VARCHAR(255),
         description TEXT,
-        PRIMARY KEY(code)
+        project_id INTEGER,
+        PRIMARY KEY(code),
+        FOREIGN KEY(project_id) REFERENCES projects(id) ON DELETE CASCADE
     ) ENGINE=InnoDB CHARSET=utf8');
 
     $pdo->exec('ALTER TABLE columns ADD COLUMN column_group_code VARCHAR(30)');
