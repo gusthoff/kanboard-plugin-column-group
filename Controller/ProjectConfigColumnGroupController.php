@@ -6,54 +6,35 @@ use Kanboard\Controller\BaseController;
 use Kanboard\Core\Controller\AccessForbiddenException;
 
 /**
- * Column Group Controller
+ * Column Group Controller for current project
  *
  * @package  Controller
  */
-class ConfigColumnGroupController extends BaseController
+class ProjectConfigColumnGroupController extends BaseController
 {
     /**
-     * Display list of column groups
+     * Display list of column groups for current project
      *
      * @access public
      */
     public function index()
     {
-        $columns = $this->columnGroupModel->getAll();
+        $project = $this->getProject();
+        $global_columns = $this->columnGroupModel->getAllGlobal();
+        $columns = $this->columnGroupModel->getAllProject($project['id'], false);
+        $ext_columns = $this->columnGroupModel->getAllExternalProject($project['id']);
 
-        foreach ($columns as $key => $value)
-        {
-            if ($columns[$key]['project_id'] != Null)
-            {
-                $prj = $this->projectModel->getById($columns[$key]['project_id']);
-                $columns[$key]['project_name'] = $prj['name'];
-            }
-        }
-
-        $this->response->html($this->helper->layout->config('ColumnGroup:config_column_group/index', array(
+        $this->response->html($this->helper->layout->project('ColumnGroup:project_config_column_group/index', array(
+            'project' => $project,
             'columns' => $columns,
+            'global_columns' => $global_columns,
+            'ext_columns' => $ext_columns,
             'title' => t('Column groups').' &gt; '.t('List'),
         )));
     }
 
-    function getProjects()
-    {
-        $projects = $this->projectModel->getAll();
-
-        $project_ids = array();
-        foreach ($projects as $p)
-        {
-            $project_ids[$p['id']] = $p['id'];
-        }
-
-        /* Additional empty code for Null */
-        $project_ids[""] = "";
-
-        return $project_ids;
-    }
-
     /**
-     * Show form to create a new column group
+     * Show form to create a new column group for current project
      *
      * @access public
      * @param array $values
@@ -62,62 +43,44 @@ class ConfigColumnGroupController extends BaseController
      */
     public function create(array $values = array(), array $errors = array())
     {
-        $project_ids = $this->getProjects();
+        $project = $this->getProject();
 
-        $values['project_id'] = "";
+        if (empty($values)) {
+            $values = array('project_id' => $project['id']);
+        }
 
-        $this->response->html($this->template->render('ColumnGroup:config_column_group/create', array(
+        $this->response->html($this->template->render('ColumnGroup:project_config_column_group/create', array(
             'values' => $values,
             'errors' => $errors,
-            'project_ids' => $project_ids
+            'project' => $project
         )));
     }
 
-    /**
-     * Show simple form to create a new global column group without project ID
-     *
-     * @access public
-     * @param array $values
-     * @param array $errors
-     * @throws \Kanboard\Core\Controller\PageNotFoundException
-     */
-    public function createSimple(array $values = array(), array $errors = array())
-    {
-        $this->response->html($this->template->render('ColumnGroup:config_column_group/create_simple', array(
-            'values' => $values,
-            'errors' => $errors,
-        )));
-    }
 
     /**
-     * Validate and add a new column group
+     * Validate and add a new column group for current project
      *
      * @access public
      */
     public function save()
     {
         $values = $this->request->getValues();
+        $project = $this->getProject();
 
         $valid = True;
         $errors = Null;
 
         if ($valid) {
-
-            /* Map empty code to Null */
-            if ($values['project_id'] === "") {
-                $values['project_id'] = Null;
-            }
-
             $result = $this->columnGroupModel->create(
                 $values['code'],
                 $values['title'],
                 $values['description'],
-                $values['project_id']
+                $project['id']
             );
 
             if ($result !== false) {
                 $this->flash->success(t('Column group created successfully.'));
-                return $this->response->redirect($this->helper->url->to('ConfigColumnGroupController', 'index', array()), true);
+                return $this->response->redirect($this->helper->url->to('ProjectConfigColumnGroupController', 'index', array()), true);
             } else {
                 $errors['title'] = array(t('Another column group with the same name exists in the project'));
             }
@@ -127,7 +90,7 @@ class ConfigColumnGroupController extends BaseController
     }
 
     /**
-     * Display a form to edit a column group
+     * Display a form to edit a column group for current project
      *
      * @access public
      * @param array $values
@@ -135,49 +98,40 @@ class ConfigColumnGroupController extends BaseController
      */
     public function edit(array $values = array(), array $errors = array())
     {
+        $project = $this->getProject();
         $column = $this->columnGroupModel->getByCode($this->request->getStringParam('column_code'));
-        $project_ids = $this->getProjects();
 
         # Add new column code for renaming
         $column['new_code'] = $column['code'];
 
-        /* Map Null to empty code */
-        if ($column['project_id'] === Null) {
-            $column['project_id'] = "";
-        }
-
-        $this->response->html($this->helper->layout->config('ColumnGroup:config_column_group/edit', array(
+        $this->response->html($this->helper->layout->project('ColumnGroup:project_config_column_group/edit', array(
             'errors' => $errors,
             'values' => $values ?: $column,
+            'project' => $project,
             'column' => $column,
-            'project_ids' => $project_ids,
-            'title' => t('Column groups').' &gt; '.t('Edit')
+            'title' => t('Column groups').' &gt; '.t('Edit'),
         )));
     }
 
     /**
-     * Validate and update a column group
+     * Validate and update a column group for current project
      *
      * @access public
      */
     public function update()
     {
+        $project = $this->getProject();
         $values = $this->request->getValues();
 
         $valid = True;
         $errors = Null;
 
         if ($valid) {
-            /* Map empty code to Null */
-            if ($values['project_id'] === "") {
-                $values['project_id'] = Null;
-            }
-
             $result = $this->columnGroupModel->update(
                 $values['code'],
                 $values['title'],
                 $values['description'],
-                $values['project_id']
+                $project['id']
             );
 
             if ($result) {
@@ -189,43 +143,48 @@ class ConfigColumnGroupController extends BaseController
                 }
 
                 $this->flash->success(t('Board updated successfully.'));
-                return $this->response->redirect($this->helper->url->to('ConfigColumnGroupController', 'index', array(
+                return $this->response->redirect($this->helper->url->to('ProjectConfigColumnGroupController', 'index', array(
                     'plugin' => 'ColumnGroup',
                     'title' => t('Column groups').' &gt; '.t('List'),
+                    'project_id' => $project['id'],
                 )));
             } else {
                 $this->flash->failure(t('Unable to update this board.'));
-                return $this->response->redirect($this->helper->url->to('ConfigColumnGroupController', 'index', array(
+                return $this->response->redirect($this->helper->url->to('ProjectConfigColumnGroupController', 'index', array(
                     'plugin' => 'ColumnGroup',
                     'title' => t('Column groups').' &gt; '.t('List'),
+                    'project_id' => $project['id'],
                 )));
             }
         }
     }
 
     /**
-     * Confirm column group suppression
+     * Confirm column group suppression for current project
      *
      * @access public
      */
     public function confirm()
     {
+        $project = $this->getProject();
         $column_code = $this->request->getStringParam('column_code');
         $column = $this->columnGroupModel->getByCode($this->request->getStringParam('column_code'));
 
-        $this->response->html($this->helper->layout->config('ColumnGroup:config_column_group/remove', array(
+        $this->response->html($this->helper->layout->project('ColumnGroup:project_config_column_group/remove', array(
+            'project' => $project,
             'column_code' => $column_code,
-            'title' => t('Column groups').' &gt; '.t('Confirm')
+            'title' => t('Column groups').' &gt; '.t('Confirm'),
         )));
     }
 
     /**
-     * Remove a column group
+     * Remove a column group for current project
      *
      * @access public
      */
     public function remove()
     {
+        $project = $this->getProject();
         $this->checkCSRFParam();
         $column_code = $this->request->getStringParam('column_code');
 
@@ -237,7 +196,8 @@ class ConfigColumnGroupController extends BaseController
             $this->flash->failure(t('Unable to remove this column.'));
         }
 
-        $this->response->redirect($this->helper->url->to('ConfigColumnGroupController', 'index', array(
+        $this->response->redirect($this->helper->url->to('ProjectConfigColumnGroupController', 'index', array(
+            'project_id' => $project['id'],
             'plugin' => 'ColumnGroup',
             'title' => t('Column groups').' &gt; '.t('List'),
         )));

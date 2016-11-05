@@ -16,8 +16,9 @@
         data-save-position-url="<?= $this->url->href('ConfigColumnGroupController', 'move', array('plugin' => 'ColumnGroup')) ?>">
         <thead>
         <tr>
-            <th class="column-70"><?= t('Column title') ?></th>
+            <th class="column-50"><?= t('Column title') ?></th>
             <th class="column-25"><?= t('Column group code') ?></th>
+            <th class="column-20"><?= t('Project') ?></th>
             <th class="column-5"><?= t('Actions') ?></th>
         </tr>
         </thead>
@@ -34,6 +35,14 @@
             </td>
             <td>
                 <?= $this->text->e($column['code']) ?>
+            </td>
+            <td>
+                <?php if (! empty($column['project_id'])): ?>
+                    <?= $this->text->e($column['project_name']) ?>
+                    <span class="tooltip" title="<?= $this->text->e($column['project_id']) ?>">
+                        <i class="fa fa-info-circle"></i>
+                    </span>
+                <?php endif ?>
             </td>
             <td>
                 <div class="dropdown">

@@ -14,8 +14,8 @@
     <?= $this->form->label(t('Description'), 'description') ?>
     <?= $this->form->text('description', $values, $errors, array('autofocus',  'maxlength="30"')) ?>
 
-    <?= $this->form->label(t('Project'), 'project_id') ?>
-    <?= $this->form->select('project_id', $project_ids, $values, $errors, array('autofocus',  'maxlength="30"')) ?>
+    <?= $values['project_id'] = "" ?>
+    <?= $this->form->hidden('project_id', $values) ?>
 
     <div class="form-actions">
         <button type="submit" class="btn btn-blue"><?= t('Save') ?></button>

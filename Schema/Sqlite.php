@@ -4,7 +4,13 @@ namespace Kanboard\Plugin\ColumnGroup\Schema;
 
 use PDO;
 
-const VERSION = 1;
+const VERSION = 2;
+
+function version_2(PDO $pdo)
+{
+    $pdo->exec('ALTER TABLE column_groups ADD COLUMN project_id INTEGER
+        REFERENCES projects(id)');
+}
 
 function version_1(PDO $pdo)
 {

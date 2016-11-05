@@ -56,7 +56,7 @@ class ColumnGroupModel extends Base
     }
 
     /**
-     * Get all columns sorted by position for a given project
+     * Get all column groups
      *
      * @access public
      * @return array
@@ -67,10 +67,67 @@ class ColumnGroupModel extends Base
     }
 
     /**
+     * Get all global column groups
+     *
+     * @access public
+     * @return array
+     */
+    public function getAllGlobal()
+    {
+        $global_col_groups  = array();
+
+        # Circumventing issue for db->eq()
+        $all_col_groups = $this->db->table(self::TABLE)->findAll();
+
+        foreach ($all_col_groups as $c) {
+            if ($c['project_id'] === Null) {
+                array_push($global_col_groups, $c);
+            }
+        }
+
+        return $global_col_groups;
+    }
+
+    /**
+     * Get all column groups for a given project
+     *
+     * @access public
+     * @param  integer $project_id      Project ID
+     * @param  Boolean $include_global  Include global column groups in query
+     * @return array
+     */
+    public function getAllProject($project_id, $include_global = False)
+    {
+        $project_col_groups = $this->db->table(self::TABLE)->eq('project_id', $project_id)->findAll();
+
+        if ($include_global) {
+            $global_col_groups = $this->getAllGlobal();
+            return $project_col_groups + $global_col_groups;
+        }
+        else {
+            return $project_col_groups;
+        }
+    }
+
+    /**
+     * Get all external column groups for a given project
+     * 
+     * Does not include global column groups
+     *
+     * @access public
+     * @param  integer $project_id      Project ID
+     * @return array
+     */
+    public function getAllExternalProject($project_id)
+    {
+        return $this->db->table(self::TABLE)->neq('project_id', $project_id)->findAll();
+    }
+
+    /**
      * Get a column group code by the column id (of an individual column)
      *
      * @access public
-     * @param  string  $column_id  Column ID
+     * @param  integer $project_id      Project ID
      * @return string
      */
     public function getColumnGroupByColumn($column_id)
@@ -101,14 +158,16 @@ class ColumnGroupModel extends Base
      * @param  string  $column_code Column code
      * @param  string  $title       Column title
      * @param  string  $description Column description
+     * @param  integer $project_id  Project ID
      * @return bool|int
      */
-    public function create($column_code, $title, $description = '')
+    public function create($column_code, $title, $description = '', $project = Null)
     {
         $values = array(
             'code' => $column_code,
             'title' => $title,
             'description' => $description,
+            'project_id' => $project,
         );
 
         return $this->db->table(self::TABLE)->persist($values);
@@ -137,13 +196,15 @@ class ColumnGroupModel extends Base
      * @param  string    $column_code   Column code
      * @param  string    $title         Column title
      * @param  string    $description   Optional description
+     * @param  integer   $project_id    Project ID
      * @return boolean
      */
-    public function update($column_code, $title, $description = '')
+    public function update($column_code, $title, $description = '', $project = Null)
     {
         return $this->db->table(self::TABLE)->eq('code', $column_code)->update(array(
             'title' => $title,
             'description' => $description,
+            'project_id' => $project,
         ));
     }
 

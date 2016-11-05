@@ -40,7 +40,7 @@ class ProjectColumnGroupController extends BaseController
     {
         $project = $this->getProject();
         $column = $this->columnModel->getById($this->request->getIntegerParam('column_id'));
-        $column_groups = $this->columnGroupModel->getAll();
+        $column_groups = $this->columnGroupModel->getAllProject($project['id'], true);
         
         $column_group_codes = array();
         foreach ($column_groups as $c)
