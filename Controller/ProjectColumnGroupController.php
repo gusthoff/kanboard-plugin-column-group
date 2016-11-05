@@ -48,6 +48,14 @@ class ProjectColumnGroupController extends BaseController
             $column_group_codes[$c['code']] = $c['code'];
         }
 
+        /* Additional empty code for Null */
+        $column_group_codes[""] = "";
+
+        /* Map Null to empty code */
+        if ($column['column_group_code'] === Null) {
+            $column['column_group_code'] = "";
+        }
+
         $this->response->html($this->helper->layout->project('ColumnGroup:project_column_group/edit', array(
             'errors' => $errors,
             'values' => $values ?: $column,
@@ -71,9 +79,17 @@ class ProjectColumnGroupController extends BaseController
         $errors = Null;
 
         if ($valid) {
+            $id                 = $values['id'];
+            $column_group_code  = $values['column_group_code'];
+
+            /* Map empty code to Null */
+            if ($column_group_code === "") {
+                $column_group_code = Null;
+            }
+
             $result = $this->columnGroupModel->updateColumn(
-                $values['id'],
-                $values['column_group_code']
+                $id,
+                $column_group_code
             );
 
             if ($result) {
