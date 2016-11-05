@@ -64,7 +64,7 @@ class ConfigColumnGroupController extends BaseController
 
             if ($result !== false) {
                 $this->flash->success(t('Column group created successfully.'));
-                return $this->response->redirect($this->helper->url->to('ColumnGroupConfigController', 'index', array()), true);
+                return $this->response->redirect($this->helper->url->to('ConfigColumnGroupController', 'index', array()), true);
             } else {
                 $errors['title'] = array(t('Another column group with the same name exists in the project'));
             }
