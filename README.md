@@ -1,6 +1,6 @@
 Column Group (Plug-in for Kanboard)
 ===============================================
-Version 0.1.0
+Version 0.1.1
 
 [![Build Status](https://travis-ci.org/gusthoff/kanboard-plugin-column-group.svg?branch=master)](https://travis-ci.org/gusthoff/kanboard-plugin-column-group)
 
@@ -28,11 +28,12 @@ This plug-in is based on source-code from
 
 This plug-in extends Kanboard's functionality with the following features:
 
-- Allows for adding and managing global column groups.
+- Allows for adding and managing global and project-specific column groups.
 - Allows for assigning columns from each project to column groups.
     - Multiple columns from the same project can be assigned to a single column
       group.
     - Multiple columns from various projects can share column groups.
+    - Projects can use both global and local column groups.
 - Displays column groups above the corresponding columns on the project board.
     - Adjacent columns belonging to the same column group can be easily
       identified on the board.
