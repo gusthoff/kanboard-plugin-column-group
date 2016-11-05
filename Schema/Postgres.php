@@ -4,7 +4,14 @@ namespace Kanboard\Plugin\ColumnGroup\Schema;
 
 use PDO;
 
-const VERSION = 2;
+const VERSION = 3;
+
+function version_3(PDO $pdo)
+{
+    $pdo->exec('ALTER TABLE column_groups ALTER COLUMN title SET NOT NULL');
+
+    $pdo->exec('ALTER TABLE column_groups ADD UNIQUE (title)');
+}
 
 function version_2(PDO $pdo)
 {

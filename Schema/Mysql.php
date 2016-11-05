@@ -4,7 +4,12 @@ namespace Kanboard\Plugin\ColumnGroup\Schema;
 
 use PDO;
 
-const VERSION = 2;
+const VERSION = 3;
+
+function version_3(PDO $pdo)
+{
+    $pdo->exec('ALTER TABLE column_groups MODIFY COLUMN title VARCHAR(255) NOT NULL UNIQUE');
+}
 
 function version_2(PDO $pdo)
 {
