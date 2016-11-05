@@ -37,12 +37,12 @@
                 <ul>
                     <li>
                         <i class="fa fa-pencil-square-o fa-fw" aria-hidden="true"></i>
-                        <?= $this->url->link(t('Edit'), 'ProjectColumnGroupController', 'edit', array('plugin' => 'ColumnGroup', 'project_id' => $project['id'], 'column_id' => $column['id']), false, 'popover') ?>
+                        <?= $this->url->link(t('Edit column'), 'ProjectColumnGroupController', 'edit', array('plugin' => 'ColumnGroup', 'project_id' => $project['id'], 'column_id' => $column['id']), false, 'popover') ?>
                     </li>
                     <?php if (! empty($column['column_group_code'])): ?>
                         <li>
                             <i class="fa fa-trash-o fa-fw" aria-hidden="true"></i>
-                            <?= $this->url->link(t('Remove'), 'ProjectColumnGroupController', 'confirm', array('plugin' => 'ColumnGroup', 'project_id' => $project['id'], 'column_id' => $column['id']), false, 'popover') ?>
+                            <?= $this->url->link(t('Remove from group'), 'ProjectColumnGroupController', 'confirm', array('plugin' => 'ColumnGroup', 'project_id' => $project['id'], 'column_id' => $column['id']), false, 'popover') ?>
                         </li>
                     <?php endif ?>
                 </ul>
