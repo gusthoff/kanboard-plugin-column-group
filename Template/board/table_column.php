@@ -85,3 +85,4 @@
     <?php endforeach ?>
 </tr>
  
+<?= $this->hook->render('template:board:table:column:after-header-row', array('swimlane' => $swimlane)) ?>

@@ -18,7 +18,7 @@ class Plugin extends Base
         $this->template->hook->attach('template:config:sidebar', 'ColumnGroup:config/sidebar');
         $this->template->setTemplateOverride('board/table_column', 'ColumnGroup:board/table_column');
 
-        $this->template->hook->attach('template:board:table:column:before-header-row', 'ColumnGroup:board/table_column_groups');
+        $this->template->hook->attach('template:board:table:column:after-header-row', 'ColumnGroup:board/table_column_groups');
 
         $this->container->extend('taskLexer', function($taskLexer, $c) {
             $taskLexer->withFilter(new ColumnGroupFilter());
