@@ -1,6 +1,6 @@
 Column Group (Plug-in for Kanboard)
 ===============================================
-Version 0.1.1
+Version 0.2.0
 
 [![Build Status](https://travis-ci.org/gusthoff/kanboard-plugin-column-group.svg?branch=master)](https://travis-ci.org/gusthoff/kanboard-plugin-column-group)
 
@@ -59,17 +59,17 @@ limitations:
 
 This plug-in was manually tested with the following configuration:
 
-- Kanboard 1.0.34
-- PHP 7.0.8
+- Kanboard 1.0.40
+- PHP 7.0.15
 - Postgres 9.5.5
 - Sqlite 3.14.1
-- Mysql 5.7.16
+- Mysql 5.7.17
 
 
 6. Requirements
 ---------------
 
-- Kanboard 1.0.34 -- 1.0.36
+- Kanboard 1.0.40
 - PHP >= 5.3.3
 
 
