@@ -69,7 +69,7 @@ This plug-in was manually tested with the following configuration:
 6. Requirements
 ---------------
 
-- Kanboard >= 1.0.34
+- Kanboard 1.0.34 -- 1.0.36
 - PHP >= 5.3.3
 
 
