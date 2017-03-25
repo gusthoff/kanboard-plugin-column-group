@@ -16,7 +16,6 @@ class Plugin extends Base
         
         $this->template->hook->attach('template:project:sidebar', 'ColumnGroup:project/sidebar');
         $this->template->hook->attach('template:config:sidebar', 'ColumnGroup:config/sidebar');
-        $this->template->setTemplateOverride('board/table_column', 'ColumnGroup:board/table_column');
 
         $this->template->hook->attach('template:board:table:column:before-header-row', 'ColumnGroup:board/table_column_groups');
 
